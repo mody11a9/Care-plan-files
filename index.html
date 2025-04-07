@@ -1,0 +1,94 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Care Plan by MR Mohammed Hamada</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background-color: #f0f0f0; }
+    header, footer {
+      background-color: #007BFF;
+      color: white;
+      text-align: center;
+      padding: 15px;
+      border-radius: 10px;
+    }
+    main {
+      background-color: white;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 600px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input, button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background-color: #007BFF;
+      color: white;
+      cursor: pointer;
+    }
+    #result {
+      white-space: pre-wrap;
+      background: #f9f9f9;
+      padding: 15px;
+      margin-top: 15px;
+      border-left: 4px solid #007BFF;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Care Plan by MR Mohammed Hamada</h1>
+  </header>
+
+  <main>
+    <h2>اكتب اسم المرض:</h2>
+    <input type="text" id="diseaseInput" placeholder="مثال: Acute Appendicitis">
+    <button onclick="generateCarePlan()">Generate Care Plan</button>
+
+    <div id="result"></div>
+  </main>
+
+  <footer>
+    <p>اللهم اجعل هذا العمل خالصًا لوجهك الكريم</p>
+    <p>واتساب للتواصل: 01097530819</p>
+  </footer>
+
+  <script>
+    async function generateCarePlan() {
+      const disease = document.getElementById("diseaseInput").value.trim();
+      const resultDiv = document.getElementById("result");
+
+      if (!disease) {
+        resultDiv.innerText = "من فضلك اكتب اسم المرض.";
+        return;
+      }
+
+      resultDiv.innerText = "جاري التحميل...";
+
+      try {
+        const response = await fetch("http://localhost:3000/generate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ disease })
+        });
+
+        const data = await response.json();
+        resultDiv.innerText = data.reply || "لم يتم استلام رد من الخادم.";
+      } catch (error) {
+        resultDiv.innerText = "حدث خطأ أثناء الاتصال بالخادم.";
+        console.error(error);
+      }
+    }
+  </script>
+</body>
+</html>
